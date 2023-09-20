@@ -18,6 +18,10 @@ const wss = new WebSocket.Server({ server });
 // Put all your backend code here.
 wss.on("connection", (socket) => {
   console.log("연결되었습니다!");
+
+  socket.addEventListener("message", (event) => {
+    console.log(event);
+  });
 });
 
 server.listen(process.env.PORT, handleListen);
