@@ -42,5 +42,5 @@ async function runFooActor(inputData) {
 }
 process.on("message", (message) => {
   let inputData = message;
-  runFooActor(inputData);
+  //runFooActor(inputData);
 });
