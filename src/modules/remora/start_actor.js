@@ -13,7 +13,7 @@ async function runFooActor(inputData) {
   console.log(campaign_name);
   try {
     // Execute the actor with input data.
-    const run = await apifyClient.actor("zmxouNS7LxOt2UPUD").call({
+    const run = await apifyClient.actor("iwwlxZ8AOjOGwEDKj").call({
       input: { input: inputData.input, name: campaign_name },
     });
 
@@ -42,5 +42,5 @@ async function runFooActor(inputData) {
 }
 process.on("message", (message) => {
   let inputData = message;
-  //runFooActor(inputData);
+  runFooActor(inputData);
 });
