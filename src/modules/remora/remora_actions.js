@@ -3,16 +3,15 @@ const path = require("path");
 const childProcesses = {}; // Object to store named child processes.
 
 function runActor(name, start, stop, inputData, socket) {
-  // Check if the 'start' parameter is provided.
+  // Check if the 'start' parameter is provided and the child process is not already running.
   //console.log(start, inputData);
-  if (start) {
+  if (start && !childProcesses[name]) {
     console.log("attempting to spawn process...");
     // Spawn a child process to run the 'foo' actor with input data.
     /*const actorProcess = spawn("node", [
       "start_actor.js",
       JSON.stringify(inputData),
     ]);*/
-    let inputt = JSON.stringify(inputData);
     const actorProcess = fork(path.join(__dirname, "start_actor.js"), {
       silent: false,
     });
