@@ -45,6 +45,8 @@ function stopActor(name) {
     // Kill the child process and remove it from the object.
     actorProcess.kill("SIGTERM");
     delete childProcesses[name];
+    console.log('killed actor process ',name);
+    console.log(childProcesses,' running child processes')
   }
 }
 
