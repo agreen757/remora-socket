@@ -1,6 +1,8 @@
 import http from "http";
 import WebSocket from "ws";
 import express from "express";
+var bodyParser = require("body-parser");
+var cors = require('cors')
 const { ApifyClient, DatasetClient } = require("apify-client");
 const { runActor, stopActor } = require("./modules/remora/remora_actions");
 const config = require("./config");
@@ -15,7 +17,7 @@ app.set("views", __dirname + "/views");
 app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (_, res) => res.render("home"));
 app.get("/*", (_, res) => res.redirect("/"));
-
+app.use(cors());
 const handleListen = () => console.log(`Listening on http://localhost:3000`);
 
 const server = http.createServer(app);
@@ -45,6 +47,13 @@ wss.on("connection", (socket) => {
       //console.log(campaign_kvstore_dataset, dataset);
       let dataset_items = await apifyClient.dataset(dataset).listItems();
 
+      let dset_items = dataset_items;
+
+      //order dset_items by date located at time with newest first
+      dset_items.items.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+
       let obj = {
         reason: "fetch_initial_batch_response",
         posts: dataset_items.items,
@@ -63,15 +72,13 @@ wss.on("connection", (socket) => {
       runActor(campaign_name, input, socket);
     }
     if (data.reason === "stop_campaign") {
-      if (data.info) {
-        running_campaigns = running_campaigns.filter((ele) => {
-          if (ele !== data.info.campaignName) {
-            return ele;
-          }
-        });
-        let campaign_name = data.info.campaignName;
-        stopActor(campaign_name);
-      }
+      running_campaigns = running_campaigns.filter((ele) => {
+        if (ele !== data.campaignName) {
+          return ele;
+        }
+      });
+      let campaign_name = data.campaignName;
+      stopActor(campaign_name);
     }
     //add a data.reason for running status and
 
