@@ -24,6 +24,12 @@ function runActor(name, inputData, socket) {
     //listen to child process messages
     actorProcess.on("message", async (message) => {
       console.log("message from process: ", message);
+
+      //sort message by date
+      message.sort((a, b) => {
+        return new Date(b.time) - new Date(a.time);
+      });
+
       let obj = {
         reason: "campaign_posts_data",
         campaignName: name,
