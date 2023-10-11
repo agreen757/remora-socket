@@ -12,7 +12,6 @@ function runActor(name, start, stop, inputData, socket) {
       "start_actor.js",
       JSON.stringify(inputData),
     ]);*/
-    let inputt = JSON.stringify(inputData);
     const actorProcess = fork(path.join(__dirname, "start_actor.js"), {
       silent: false,
     });
