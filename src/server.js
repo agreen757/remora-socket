@@ -60,7 +60,7 @@ wss.on("connection", (socket) => {
       let campaign_name = data.info.customData.campaignName;
       running_campaigns.push(campaign_name);
       //send this to the thing
-      runActor(campaign_name, true, false, input, socket);
+      runActor(campaign_name, input, socket);
     }
     if (data.reason === "stop_campaign") {
       if (data.info) {
