@@ -42,7 +42,7 @@ wss.on("connection", (socket) => {
       let dataset = campaign_kvstore_dataset.value
         ? campaign_kvstore_dataset.value
         : campaign_kvstore_dataset;
-      console.log(campaign_kvstore_dataset, dataset);
+      //console.log(campaign_kvstore_dataset, dataset);
       let dataset_items = await apifyClient.dataset(dataset).listItems();
 
       let obj = {
@@ -55,11 +55,12 @@ wss.on("connection", (socket) => {
       socket.send(JSON.stringify(obj));
     }
     if (data.reason === "start_campaign") {
+      console.log("starting campaign");
       let input = data.input;
       let campaign_name = data.info.customData.campaignName;
       running_campaigns.push(campaign_name);
       //send this to the thing
-      runActor(campaign_name, true, false, input, socket);
+      runActor(campaign_name, input, socket);
     }
     if (data.reason === "stop_campaign") {
       if (data.info) {
