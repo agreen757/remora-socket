@@ -34,14 +34,7 @@ function runActor(name, inputData, socket) {
       await socket.send(JSON.stringify(obj));
     });
 
-    // Listen for exit events to handle the 'stop' parameter.
-    actorProcess.on("exit", (code, signal) => {
-      if (stop) {
-        // Perform cleanup and remove the child process from the object.
-        delete childProcesses[name];
-        actorProcess.kill(signal);
-      }
-    });
+    
   }
 }
 
