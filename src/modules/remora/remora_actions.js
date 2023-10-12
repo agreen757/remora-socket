@@ -46,11 +46,11 @@ function runActor(name, inputData, socket) {
 
 // Function to stop a named child process.
 function stopActor(name) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const actorProcess = childProcesses[name];
     if (actorProcess) {
       // Kill the child process and remove it from the object.
-      actorProcess.kill("SIGTERM");
+      await actorProcess.kill("SIGTERM");
       delete childProcesses[name];
       console.log('killed actor process ',name);
       console.log(childProcesses,' running child processes')
