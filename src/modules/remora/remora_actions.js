@@ -23,7 +23,7 @@ function runActor(name, inputData, socket) {
 
     //listen to child process messages
     actorProcess.on("message", async (message) => {
-      console.log("message from process: ", message);
+      //console.log("message from process: ", message);
 
       //sort message by date
       message.sort((a, b) => {
@@ -46,14 +46,17 @@ function runActor(name, inputData, socket) {
 
 // Function to stop a named child process.
 function stopActor(name) {
-  const actorProcess = childProcesses[name];
-  if (actorProcess) {
-    // Kill the child process and remove it from the object.
-    actorProcess.kill("SIGTERM");
-    delete childProcesses[name];
-    console.log('killed actor process ',name);
-    console.log(childProcesses,' running child processes')
-  }
+  return new Promise((resolve, reject) => {
+    const actorProcess = childProcesses[name];
+    if (actorProcess) {
+      // Kill the child process and remove it from the object.
+      actorProcess.kill("SIGTERM");
+      delete childProcesses[name];
+      console.log('killed actor process ',name);
+      console.log(childProcesses,' running child processes')
+    }
+    resolve(name);
+  });
 }
 
 module.exports = { runActor, stopActor };
