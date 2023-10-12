@@ -34,7 +34,7 @@ async function runFooActor(inputData) {
 
     console.log("Actor execution completed.");
     setTimeout(function () {
-      //runFooActor(inputData);
+      runFooActor(inputData);
     }, 1000);
   } catch (error) {
     console.error("Error executing actor:", error);
