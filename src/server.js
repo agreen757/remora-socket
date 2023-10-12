@@ -42,12 +42,15 @@ app.post('/start', async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   //accept all methods
   res.setHeader('Access-Control-Allow-Methods', '*');
-
+  if (g_socket === null) {
+    res.send("no socket");
+    return;
+  }
   let input = req.body.input;
   let campaign_name = req.body.info.customData.campaignName;
   running_campaigns.push(campaign_name);
   //send this to the thing
-  runActor(campaign_name, input, socket);
+  runActor(campaign_name, input, g_socket);
   res.send("started "+campaign_name);
 })
 
@@ -56,8 +59,10 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 let running_campaigns = [];
+let g_socket = null;
 // Put all your backend code here.
 wss.on("connection", (socket) => {
+  g_socket = socket;
   socket.addEventListener("message", async (event) => {
     let data = event.data ? JSON.parse(event.data) : null;
     console.log(data);
