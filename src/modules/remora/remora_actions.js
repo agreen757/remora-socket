@@ -20,6 +20,7 @@ function runActor(name, inputData, socket) {
 
     // Store the child process object using the provided name.
     childProcesses[name] = actorProcess;
+    childProcesses[name].socket = socket;
 
     //listen to child process messages
     actorProcess.on("message", async (message) => {
@@ -37,7 +38,7 @@ function runActor(name, inputData, socket) {
       };
 
       //send message to client
-      await socket.send(JSON.stringify(obj));
+      await childProcesses[name].socket.send(JSON.stringify(obj));
     });
 
     
@@ -50,7 +51,7 @@ function stopActor(name) {
     const actorProcess = childProcesses[name];
     if (actorProcess) {
       // Kill the child process and remove it from the object.
-      actorProcess.kill();
+      await actorProcess.kill(1);
       //remove from childProcesses object
       delete childProcesses[name];
       console.log('killed actor process ',name);
