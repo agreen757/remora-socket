@@ -34,6 +34,12 @@ app.post("/stop", async (req, res) => {
   console.log('stopping ',campaign_name);
   await stopActor(campaign_name).then((name) => {
 
+    running_campaigns = running_campaigns.filter((ele) => {
+      if (ele !== campaignName) {
+        return ele;
+      }
+    });
+
     res.send("stopped "+campaign_name);
 
 

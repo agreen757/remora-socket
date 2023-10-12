@@ -50,7 +50,8 @@ function stopActor(name) {
     const actorProcess = childProcesses[name];
     if (actorProcess) {
       // Kill the child process and remove it from the object.
-      await actorProcess.kill("SIGTERM");
+      actorProcess.kill();
+      //remove from childProcesses object
       delete childProcesses[name];
       console.log('killed actor process ',name);
       console.log(childProcesses,' running child processes')
