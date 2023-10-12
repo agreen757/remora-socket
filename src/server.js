@@ -35,7 +35,7 @@ app.post("/stop", async (req, res) => {
   await stopActor(campaign_name).then((name) => {
 
     running_campaigns = running_campaigns.filter((ele) => {
-      if (ele !== campaignName) {
+      if (ele !== name) {
         return ele;
       }
     });
