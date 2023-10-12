@@ -16,9 +16,26 @@ app.set("view engine", "pug");
 app.set("views", __dirname + "/views");
 app.use("/public", express.static(__dirname + "/public"));
 app.get("/", (_, res) => res.render("home"));
-app.get("/*", (_, res) => res.redirect("/"));
+//app.get("/*", (_, res) => res.redirect("/"));
 app.use(cors());
+app.use(bodyParser.json());
+
 const handleListen = () => console.log(`Listening on http://localhost:3000`);
+
+//post request will execute the stopActor function
+app.post("/stop", async (req, res) => {
+
+  //accept all headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  //accept all methods
+  res.setHeader('Access-Control-Allow-Methods', '*');
+
+  let campaign_name = req.body.campaignName;
+  console.log(campaign_name);
+  stopActor(campaign_name);
+  res.send("stopped",campaign_name);
+
+});
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
