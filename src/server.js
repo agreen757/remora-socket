@@ -46,6 +46,8 @@ wss.on("connection", (socket) => {
   socket.addEventListener("message", async (event) => {
     let data = event.data ? JSON.parse(event.data) : null;
     console.log(data);
+
+
     if (data.reason === "fetch_initial_batch") {
       console.log(running_campaigns.indexOf(data.id));
       let running = running_campaigns.indexOf(data.id) !== -1 ? true : false;
@@ -68,7 +70,7 @@ wss.on("connection", (socket) => {
 
       //order dset_items by date located at time with newest first
       dset_items.items.sort((a, b) => {
-        return new Date(b.createdAt) - new Date(a.createdAt);
+        return new Date(b.time) - new Date(a.time);
       });
 
       let obj = {
