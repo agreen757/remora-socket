@@ -33,9 +33,24 @@ app.post("/stop", async (req, res) => {
   let campaign_name = req.body.campaignName;
   console.log(campaign_name);
   stopActor(campaign_name);
-  res.send("stopped",campaign_name);
+  res.send("stopped "+campaign_name);
 
 });
+app.post('/start', async (req, res) => {
+
+  //accept all headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  //accept all methods
+  res.setHeader('Access-Control-Allow-Methods', '*');
+
+  let input = req.body.input;
+  let campaign_name = req.body.info.customData.campaignName;
+  running_campaigns.push(campaign_name);
+  //send this to the thing
+  runActor(campaign_name, input, socket);
+  res.send("started "+campaign_name);
+})
+
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
