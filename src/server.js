@@ -31,9 +31,16 @@ app.post("/stop", async (req, res) => {
   res.setHeader('Access-Control-Allow-Methods', '*');
 
   let campaign_name = req.body.campaignName;
-  console.log(campaign_name);
-  stopActor(campaign_name);
-  res.send("stopped "+campaign_name);
+  console.log('stopping ',campaign_name);
+  await stopActor(campaign_name).then((name) => {
+
+    res.send("stopped "+campaign_name);
+
+
+  }).catch((err) => {
+    console.log(err);
+  });
+  
 
 });
 app.post('/start', async (req, res) => {
