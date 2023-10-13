@@ -65,7 +65,64 @@ app.post('/start', async (req, res) => {
   //send this to the thing
   runActor(campaign_name, input, g_socket);
   res.send("started "+campaign_name);
-})
+});
+
+//post request will do the same as fetch_initial_batch taking the campaign name and the page number in the body.
+//check the body for the campaign name and page number and handle errors if they are not there.
+app.post("/fetch", async (req, res) => {
+  //accept all headers
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  //accept all methods
+  res.setHeader('Access-Control-Allow-Methods', '*');
+
+  if (req.body.campaignName && req.body.pageNumber) {
+    let campaign_name = req.body.campaignName;
+    let page_number = req.body.pageNumber;
+    let page_size = req.body.pageSize;
+    
+    console.log(running_campaigns.indexOf(campaign_name));
+    let running = running_campaigns.indexOf(campaign_name) !== -1 ? true : false;
+
+    let campaign_kvstore_location = await apifyClient
+      .keyValueStore("commemorative_throne~" + campaign_name)
+      .getRecord("location_url");
+
+    let campaign_kvstore_dataset = await apifyClient
+      .keyValueStore("commemorative_throne~" + campaign_name)
+      .getRecord("dataset_id");
+
+    let dataset = campaign_kvstore_dataset.value
+      ? campaign_kvstore_dataset.value
+      : campaign_kvstore_dataset;
+    //console.log(campaign_kvstore_dataset, dataset);
+    let dataset_items = await apifyClient.dataset(dataset).listItems();
+
+    let dset_items = dataset_items;
+
+    //order dset_items by date located at time with newest first
+    dset_items.items.sort((a, b) => {
+      return new Date(b.time) - new Date(a.time);
+    });
+
+    //handle the page number and page size
+    let start = page_number * page_size;
+    let end = start + page_size;
+    let items = dset_items.items.slice(start, end);
+
+
+
+    let obj = {
+      posts: items,
+      running: running,
+      location: campaign_kvstore_location,
+    };
+
+    res.send(JSON.stringify(obj));
+  } else {
+    res.send("Invalid request");
+  }
+});
+    
 
 
 const server = http.createServer(app);
