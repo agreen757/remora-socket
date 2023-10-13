@@ -74,8 +74,13 @@ app.post("/fetch", async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   //accept all methods
   res.setHeader('Access-Control-Allow-Methods', '*');
-
-  if (req.body.campaignName && req.body.pageNumber) {
+  //check if req.body has campaignName, pageSize and pageNumber and pageNumber is a number that could be zero 
+  if (
+    req.body.campaignName &&
+    req.body.pageNumber &&
+    req.body.pageSize &&
+    !isNaN(req.body.pageNumber)
+  ) {
     let campaign_name = req.body.campaignName;
     let page_number = req.body.pageNumber;
     let page_size = req.body.pageSize;
