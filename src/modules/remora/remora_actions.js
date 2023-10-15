@@ -1,8 +1,11 @@
+import WebSocket from "ws";
 const { spawn, fork } = require("child_process");
 const path = require("path");
 const childProcesses = {}; // Object to store named child processes.
 
-function runActor(name, inputData, socket) {
+
+
+function runActor(name, inputData) {
   // Check if the 'start' parameter is provided and the child process is not already running.
   //console.log(start, inputData);
   if (!childProcesses[name]) {
@@ -20,7 +23,7 @@ function runActor(name, inputData, socket) {
 
     // Store the child process object using the provided name.
     childProcesses[name] = actorProcess;
-    childProcesses[name].socket = socket;
+    //childProcesses[name].socket = socket;
 
     //listen to child process messages
     actorProcess.on("message", async (message) => {
@@ -38,7 +41,9 @@ function runActor(name, inputData, socket) {
       };
 
       //send message to client
-      await childProcesses[name].socket.send(JSON.stringify(obj));
+      if (childProcesses[name].socket) {
+        await childProcesses[name].socket.send(JSON.stringify(obj));
+      }
     });
 
     
@@ -60,5 +65,26 @@ function stopActor(name) {
     resolve(name);
   });
 }
+function iniSocket(n_socket) {
 
-module.exports = { runActor, stopActor };
+  n_socket.addEventListener("message", (event) => {
+
+    let data = event.data ? JSON.parse(event.data) : null;
+    console.log(data);
+
+    if (data.reason === 'init') {
+
+      let campaign_name = data.id;
+
+      if (childProcesses[campaign_name]) {
+        childProcesses[campaign_name].socket = n_socket;
+      }
+
+    }
+
+  });
+    
+    
+}
+
+module.exports = { runActor, stopActor, iniSocket };
