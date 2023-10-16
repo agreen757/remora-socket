@@ -41,7 +41,7 @@ function runActor(name, inputData) {
       };
 
       //send message to client
-      if (childProcesses[name].socket) {
+      if (childProcesses[name].socket && childProcesses[name].socket.readyState !== WebSocket.CLOSED) {
         await childProcesses[name].socket.send(JSON.stringify(obj));
       }
     });
