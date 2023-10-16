@@ -77,7 +77,6 @@ app.post("/fetch", async (req, res) => {
   //check if req.body has campaignName, pageSize and pageNumber and pageNumber is a number that could be zero 
   if (
     req.body.campaignName &&
-    req.body.pageNumber &&
     req.body.pageSize &&
     !isNaN(req.body.pageNumber)
   ) {
@@ -85,7 +84,6 @@ app.post("/fetch", async (req, res) => {
     let page_number = req.body.pageNumber;
     let page_size = req.body.pageSize;
     
-    console.log(running_campaigns.indexOf(campaign_name));
     let running = running_campaigns.indexOf(campaign_name) !== -1 ? true : false;
 
     let campaign_kvstore_location = await apifyClient
