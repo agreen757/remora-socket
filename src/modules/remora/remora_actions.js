@@ -70,7 +70,7 @@ function iniSocket(n_socket) {
   n_socket.addEventListener("message", (event) => {
 
     let data = event.data ? JSON.parse(event.data) : null;
-    console.log(data);
+    console.log(data.reason);
 
     if (data.reason === 'init') {
 
