@@ -65,7 +65,7 @@ function stopActor(name) {
     resolve(name);
   });
 }
-function iniSocket(n_socket) {
+function initSocket(n_socket) {
 
   n_socket.addEventListener("message", (event) => {
 
@@ -87,4 +87,4 @@ function iniSocket(n_socket) {
     
 }
 
-module.exports = { runActor, stopActor, iniSocket };
+module.exports = { runActor, stopActor, initSocket };
